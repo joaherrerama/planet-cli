@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "planet-cli"
+version = "0.1.0"
+description = "This is a CLI tool that facilitates the acquisition of Sentinel Hub imagery"
+authors = ["Jorge Herrera"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+click = "^8.1.7"
+cli-test-helpers = "^4.0.0"
+pytest = "^8.3.3"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.10.0"
+flake8 = "^7.1.1"
+pre-commit = "^4.0.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.poetry.scripts]
+post-install = "planet_cli.post_installation.create_config:create_config_file"
+planet-cli = "planet_cli.cli:main" # entry point
