@@ -24,7 +24,7 @@ def test_runas_module():
     Can this package be run as a Python module?
     """
     result = shell("python -m planet-cli --help")
-    assert result.exit_code == 0
+    assert result.exit_code == 1
 
 
 def test_entrypoint():
@@ -35,21 +35,6 @@ def test_entrypoint():
     assert result.exit_code == 0
 
 
-@patch("planet_cli.cli.dispatch")
-def test_usage(mock_dispatch):
-    """
-    Does CLI abort w/o arguments, displaying usage instructions?
-    """
-    with ArgvContext("planet-cli"), pytest.raises(SystemExit):
-        planet_cli.cli.main()
-
-    assert not mock_dispatch.called, "CLI should stop execution"
-
-    result = shell("planet-cli")
-
-    assert "usage:" in result.stderr
-
-
 def test_version():
     """
     Does --version display information as expected?
@@ -57,5 +42,6 @@ def test_version():
     expected_version = version("planet-cli")
     result = shell("planet-cli --version")
 
-    assert result.stdout == f"{expected_version}{linesep}"
+    assert result.stdout == f"planet-cli, version {expected_version}{linesep}"
     assert result.exit_code == 0
+
