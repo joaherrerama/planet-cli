@@ -35,10 +35,10 @@ def output_format(output_format):
 
 @config.command("output-type")
 @click.argument("output_type", type=click.Choice(["visual", "ndvi"]), nargs=1)
-def output_format(output_format):
+def output_type(output_type):
     """output-type (default: visual) - Set output type selection for general purpose."""
     config = ConfigManager()
-    config.set_output_format(output_format)
-    click.echo(f"The output type '{output_format}' is successfully stored'.")
+    config.set_output_type(output_format)
+    click.echo(f"The output type '{output_type}' is successfully stored'.")
 
 

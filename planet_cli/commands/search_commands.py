@@ -2,8 +2,7 @@
 
 import os
 import click
-from planet_cli.classes.geometry_handler import GeometryHandler
-from planet_cli.classes.proccess_api_manager import ProcessApiManager
+from planet_cli.classes.process_api_manager import ProcessApiManager
 from planet_cli.commands.utils import validate_time
 
 
