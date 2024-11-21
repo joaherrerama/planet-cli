@@ -133,13 +133,19 @@ $ source venv/bin/activate
 ### Install dependencies
 $ pip install -r requirements.txt
 
+### Create config file
+$ python post_installation/create_config.py
+
 ### Run the tool
 $ python planet_cli --help
 
 ### Run tests
 $ pytest
 ```
-
+And easy way is using the install.sh, this wraps up the previous steps in one line:
+```bash
+$ bash installation.sh
+```
 You can also built it using:
 ```bash
 $ pip install --editable .
@@ -150,24 +156,24 @@ In the repository you can find also the [wheel file (.whl)](dist/planet_cli-0.0.
 
 ## Notes ##
 
-- Todos los archivos de aoi independientemente de su CRS, son transformados a CRS 4326
-- Resolution is 10 meters in all cases thorugh the code.
-- There are various validation points for geometry, credentials, dates and typos
+- All AOI files, regardless of their original Coordinate Reference System (CRS), are converted to CRS 4326.
+- A fixed resolution of 10 meters is used throughout the code.
+- Various validation checks are in place for geometry, credentials, dates, and potential typos.
 
 ## Further Improvements ##
 The following items are suggestions for further implementation on the existing code:
 
   - **Functionality**: 
-      - The current code manage the geometry and utilize one source of data S2A. An further step would be to implement a module to handles the different sources, this implies resolution and source as well as the complexity of the bands and evalscripts.
-      - Evalscripts could be long and tedious to handle, a class was implemented to handles the different options, but a externat source or catalog would be convenient and feed it trough the registry command.
-      - Enhance the managment of geometries, as currently any admited file is transform to CRS 4326
-      - Future developments would be discriminate ErrorHandling and use of abstract classes
-      - The cuerrent code uses a config.json to store credentials and format and times. Improve how to handle sensitive info like credentials would be something to dig into.
+      - Currently, the code processes geometry and utilizes S2A data. A next step would be to implement a module to handle various data sources, considering factors like resolution, source type, band complexity, and evaluation scripts.
+      - Evaluation scripts can be lengthy and complex. While a class was implemented to handle different options, an external source or catalog could provide a more convenient solution, allowing scripts to be integrated via a registry command.
+      - The current geometry management approach involves transforming all admitted files to CRS 4326. Future enhancements could include more flexible geometry handling, such as supporting multiple CRS or on-the-fly projections.
+      - Future developments should focus on improving error handling and utilizing abstract classes to enhance code modularity and maintainability.
+      The current code stores credentials, formats, and time information in a config.json file. It's essential to explore more secure methods for handling sensitive information like credentials.
 
   - **Testing**:
-    - The current test code does not cover all the functionalities. As a further step. Modular testing, functional testing and integration testing are highly important. 
-    - Create more failing scenarios adding fail tests and improving Error Handling
-    - Improve mocking implementation for Credentials validation
+    - The current test code does not comprehensively cover all functionalities. To enhance test coverage, modular, functional, and integration testing should be implemented.
+    - More failing test scenarios should be added to improve error handling and robustness.
+    - The mocking implementation for credential validation should be refined to increase test reliability and efficiency.
 
 
 Made with :heart: by <a href="https://github.com/joaherrerama" target="_blank">Jorge Herrera</a>
