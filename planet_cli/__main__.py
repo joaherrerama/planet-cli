@@ -1,4 +1,4 @@
-from planet_cli.cli import cli
+from planet_cli.cli import main
 
 if __name__== "__main__":
-    cli()
+    main()
