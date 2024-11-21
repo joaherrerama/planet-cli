@@ -11,12 +11,19 @@ python = "^3.12"
 click = "^8.1.7"
 cli-test-helpers = "^4.0.0"
 pytest = "^8.3.3"
+oauthlib = "^3.2.2"
+requests-oauthlib = "^2.0.0"
+dateutils = "^0.6.12"
+sentinelhub = "^3.11.1"
+geojson = "^3.1.0"
+geopandas = "^1.0.1"
 
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.10.0"
 flake8 = "^7.1.1"
 pre-commit = "^4.0.1"
+pylint = "^3.3.1"
 
 [build-system]
 requires = ["poetry-core"]

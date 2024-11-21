@@ -12,7 +12,7 @@ def create_config_file() -> None:
         "output-type": "visual"
     }
 
-    config_file = "config.json"
+    config_file = ".config/config.json"
 
     if not os.path.exists(config_file):
         with open(config_file, "w", encoding="utf-8") as config:
