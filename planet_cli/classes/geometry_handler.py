@@ -73,7 +73,7 @@ class GeometryHandler:
         """
 
         gdf = gpd.read_file(self.geometry_file, driver=driver)
-        dissolved = gdf.unary_union
+        dissolved = gdf.union_all()
 
         is_projected = gdf.crs.is_projected
         

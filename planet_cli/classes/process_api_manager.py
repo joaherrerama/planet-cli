@@ -18,8 +18,22 @@ from planet_cli.classes.geometry_handler import GeometryHandler
 
 class ProcessApiManager:
 
-    def ___inti__(self):
-        self.__collection = DataCollection.SENTINEL2_L2A
+    def __init__(self): 
+        self._collection = DataCollection.SENTINEL2_L2A
+
+
+    def __get_sh_parameters(self, aoi: str):
+        """
+        Process the geometry utilizing the GeometryHandler
+        returning the parameters wkt_geometry, sh_bbox, sh_dimensions
+        required for SentinelHubRequest
+        """
+        geometry_instance = GeometryHandler(aoi)
+        wkt_geometry = geometry_instance.get_geometry()
+        sh_bbox = geometry_instance.get_sh_bbox()
+        sh_dimensions = geometry_instance.get_sh_dimensions()
+        return wkt_geometry, sh_bbox, sh_dimensions
+
 
     def process(
             self,
@@ -30,7 +44,20 @@ class ProcessApiManager:
             client_secret: str = None,
             output_type: str = None,
             output_format: str = None
-        ):
+        ) -> SentinelHubRequest:
+        """
+        The process method aims to collect all the parameters required
+        to process a SentinelHubRequest
+
+        params:
+            - aoi: path to the area of interest
+            - start_date: starting date in format datetime.datetime
+            - end_date:  end date in format datetime.datetime
+            - client_id: Client ID from SentinHub profile 
+            - client_secret: Client Secret from SentinHub profile 
+            - output_type: Type of product either visual or ndvi
+            - output_format: Type of format either tiff or png
+        """
 
         local_config = ConfigManager()
 
@@ -45,10 +72,7 @@ class ProcessApiManager:
 
         config = SHConfig(sh_client_id=client_id, sh_client_secret=client_secret)
 
-        geometry_instance = GeometryHandler(aoi)
-        wkt_geometry = geometry_instance.get_geometry()
-        sh_bbox = geometry_instance.get_sh_bbox()
-        sh_dimensions = geometry_instance.get_sh_dimensions()
+        wkt_geometry, sh_bbox, sh_dimensions = self.__get_sh_parameters(aoi)
 
         evalscript_sh = EvalScriptManager().generate_script(output_type,output_format)
         output_format_sh = MimeType.TIFF if output_format == "tiff" else MimeType.PNG
@@ -59,7 +83,7 @@ class ProcessApiManager:
             evalscript=evalscript_sh,
             input_data=[
                 SentinelHubRequest.input_data(
-                    data_collection= DataCollection.SENTINEL2_L2A,
+                    data_collection= self._collection,
                     time_interval=(start_date, end_date),
                     mosaicking_order=MosaickingOrder.LEAST_CC,
                 )

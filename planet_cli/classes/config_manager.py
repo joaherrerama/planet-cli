@@ -31,12 +31,17 @@ class ConfigManager:
             or an empty dict in case the file does not exist.
         """
 
-        #try:
-        with open(self.config_file, "r", encoding="utf-8") as f:
-            return json.load(f)
-        #except FileNotFoundError:
-        #    return {}
-        
+        try:
+            with open(self.config_file, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except FileNotFoundError:
+           return {}
+    
+
+    def __update_config_file(self, config_json):
+        with open(self.config_file, "w", encoding="utf-8") as f:
+                json.dump(config_json, f, indent=4)
+
     def set_token(self, token:dict) -> None:
         """ Save token in case needs to be refresh"""
         config_json = self.__get_config()
@@ -48,7 +53,8 @@ class ConfigManager:
     def set_credentials(self, client_id: str, client_secret: str) -> None:
         """
         Save the Sentinel Hub credentials for API authorization
-            - credentials: str -> Token from Sentinel Hub
+            - client_id: str -> CLient ID from Sentinel Hub
+            - client_secret: str -> CLient secret from Sentinel Hub
         """
         token = request_token(client_id, client_secret)
 
@@ -56,30 +62,22 @@ class ConfigManager:
             config_json = self.__get_config()
             config_json[self._client_id_key] = client_id
             config_json[self._client_secret_key] = client_secret
-            config_json[self._token_key] = token
 
-            with open(self.config_file, "w", encoding="utf-8") as f:
-                json.dump(config_json, f)
+            self.__update_config_file(config_json)
 
 
     def set_output_type(self, output_type: str) -> None: 
         """Save output type"""
-        if self.__output_type_validator(output_type):
-            config_json = self.__get_config()
-            config_json[self._output_type_key] = output_type
-
-            with open(self.config_file, "w", encoding="utf-8") as f:
-                json.dump(config_json, f)
+        config_json = self.__get_config()
+        config_json[self._output_type_key] = output_type
+        self.__update_config_file(config_json)
 
 
     def set_output_format(self, output_format: str) -> None:
         """Save credentials for future executions"""
-        if self.__output_format_validator(output_format):
-            config_json = self.__get_config()
-            config_json[self._output_format_key] = output_format
-
-            with open(self.config_file, "w", encoding="utf-8") as f:
-                json.dump(config_json, f)
+        config_json = self.__get_config()
+        config_json[self._output_format_key] = output_format
+        self.__update_config_file(config_json)
 
 
     def get_credentials(self) -> tuple[str, str]:
@@ -96,7 +94,7 @@ class ConfigManager:
 
         try:
             return config_json[self._client_id_key], config_json[self._client_secret_key]
-        except NameError as e:
+        except Exception as e:
             raise CredentialNotFoundError(
                 "Credentials is not defined, please use --client-id and --client-secret options  or \
                     planet-cli config credentials CLIENT_ID CLIENT_SECRET."
