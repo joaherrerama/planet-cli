@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "planet-cli"
-version = "0.1.0"
+version = "0.0.1"
 description = "This is a CLI tool that facilitates the acquisition of Sentinel Hub imagery"
 authors = ["Jorge Herrera"]
 license = "MIT"
