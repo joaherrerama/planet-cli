@@ -66,14 +66,14 @@ class ConfigManager:
             self.__update_config_file(config_json)
 
 
-    def set_output_type(self, output_type: str) -> None: 
+    def set_output_type(self, output_type: str): 
         """Save output type"""
         config_json = self.__get_config()
         config_json[self._output_type_key] = output_type
         self.__update_config_file(config_json)
 
 
-    def set_output_format(self, output_format: str) -> None:
+    def set_output_format(self, output_format: str):
         """Save credentials for future executions"""
         config_json = self.__get_config()
         config_json[self._output_format_key] = output_format

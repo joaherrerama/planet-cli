@@ -32,7 +32,7 @@ class GeometryHandler:
         }
 
     
-    def __validate_geometry(self, geometry: shapely.geometry, is_projected: bool):
+    def __validate_geometry(self, geometry: shapely.geometry, is_projected: bool) -> bool:
         """
         Validates the provided geometry based on area constraints and API processing limits.
 
@@ -62,11 +62,11 @@ class GeometryHandler:
 
 
 
-    def __get_file_extension(self):
+    def __get_file_extension(self) -> str:
         """The method returns the file extension of the file"""
         return self.geometry_file.split(".")[-1].lower()
     
-    def __read_geometry_file(self, driver: str):
+    def __read_geometry_file(self, driver: str) -> shapely.geometry:
         """ 
         This method handles all the readings in the different formats
         passing by a str and returning a wkt 
@@ -83,22 +83,21 @@ class GeometryHandler:
             transformer = Transformer.from_crs(gdf.crs.to_epsg(), 4326, always_xy=True)
             transformed_geometry = transform(transformer.transform, dissolved)
             return transformed_geometry
-
         return dissolved
 
-    def _kml_reader(self):
+    def _kml_reader(self) -> shapely.geometry:
         """Reads KML files and convert it into WKT"""
         return self.__read_geometry_file("KML")
 
-    def _shp_reader(self):
+    def _shp_reader(self) -> shapely.geometry:
         """Reads SHP files and convert it into WKT"""
         return self.__read_geometry_file("ESRI Shapefile")
 
-    def _geojson_reader(self):
+    def _geojson_reader(self)-> shapely.geometry:
         """Reads Geojson files and convert it into WKT"""
         return self.__read_geometry_file("GeoJSON")
 
-    def get_sh_bbox(self):
+    def get_sh_bbox(self) -> BBox:
         """ 
         Method return the bbox format required for 
         SentinelHub Request based on the Geometry provided
@@ -106,7 +105,7 @@ class GeometryHandler:
         geometry = self._extension_reader[self._file_extension]()
         return BBox(bbox=geometry.bounds, crs=CRS.WGS84)
     
-    def get_sh_dimensions(self, resolution:int= 10):
+    def get_sh_dimensions(self, resolution:int= 10) -> tuple:
         """
         Method return the dimensions required for 
         SentinelHub Request based on the Geometry provided
@@ -114,7 +113,7 @@ class GeometryHandler:
         bbox = self.get_sh_bbox()
         return bbox_to_dimensions(bbox, resolution=resolution)
 
-    def get_geometry(self):
+    def get_geometry(self) -> str:
         """Method returns the geometry in WKT format"""
         if self._file_extension in self._extension_reader:
             geometry = self._extension_reader[self._file_extension]()
