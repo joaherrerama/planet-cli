@@ -22,12 +22,12 @@ def test_credentials_command_valid(mock_config_manager):
     mock_config_manager.return_value = mock_instance
 
     with patch("planet_cli.classes.utils.request_token") as mock_request_token:
-        mock_request_token.return_value = {"access_token": "valid-token"} 
+        mock_request_token.return_value = {"access_token": "valid-token"}
 
         mock_instance.__get_config.return_value = {
-            'client_id': None,
-            'client_secret': None,
-            'token': None
+            "client_id": None,
+            "client_secret": None,
+            "token": None,
         }
 
         try:
@@ -42,7 +42,7 @@ def test_output_format_command(mock_config_manager):
     mock_config_manager.return_value = mock_instance
 
     try:
-        with ArgvContext('planet-cli', 'config', 'output-format', 'tiff') as args:
+        with ArgvContext("planet-cli", "config", "output-format", "tiff") as args:
             args = cli.main(args=args)
     except SystemExit as e:
         assert e.code == 0
@@ -53,7 +53,7 @@ def test_output_format_command_fail(mock_config_manager):
     mock_config_manager.return_value = mock_instance
 
     try:
-        with ArgvContext('planet-cli', 'config', 'output-format', 'jpg') as args:
+        with ArgvContext("planet-cli", "config", "output-format", "jpg") as args:
             args = cli.main(args=args)
     except SystemExit as e:
         assert e.code != 0
@@ -65,7 +65,7 @@ def test_output_type_command(mock_config_manager):
     mock_config_manager.return_value = mock_instance
 
     try:
-        with ArgvContext('planet-cli', 'config', 'output-type', 'visual') as args:
+        with ArgvContext("planet-cli", "config", "output-type", "visual") as args:
             args = cli.main(args=args)
     except SystemExit as e:
         assert e.code == 0
@@ -76,7 +76,7 @@ def test_output_type_command_fail(mock_config_manager):
     mock_config_manager.return_value = mock_instance
 
     try:
-        with ArgvContext('planet-cli', 'config', 'output-type', 'infrared') as args:
+        with ArgvContext("planet-cli", "config", "output-type", "infrared") as args:
             args = cli.main(args=args)
     except SystemExit as e:
         assert e.code != 0

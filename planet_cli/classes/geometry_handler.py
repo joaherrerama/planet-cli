@@ -1,16 +1,14 @@
 """
     This module will handle the Geometry Objects used un the CLI
 """
+
 import geopandas as gpd
 import shapely
 from pyproj import Transformer
 from shapely.ops import transform
 from planet_cli.classes.error_manager import GeometryLimitError, GeometryTypeError
-from sentinelhub import (
-    BBox,
-    bbox_to_dimensions,
-    CRS
-)
+from sentinelhub import BBox, bbox_to_dimensions, CRS
+
 
 class GeometryHandler:
     """
@@ -28,11 +26,12 @@ class GeometryHandler:
         self._extension_reader = {
             "shp": self._shp_reader,
             "kml": self._kml_reader,
-            "geojson": self._geojson_reader
+            "geojson": self._geojson_reader,
         }
 
-    
-    def __validate_geometry(self, geometry: shapely.geometry, is_projected: bool) -> bool:
+    def __validate_geometry(
+        self, geometry: shapely.geometry, is_projected: bool
+    ) -> bool:
         """
         Validates the provided geometry based on area constraints and API processing limits.
 
@@ -42,7 +41,9 @@ class GeometryHandler:
         """
 
         if not isinstance(geometry, (shapely.Polygon, shapely.MultiPolygon)):
-            raise GeometryTypeError(f"Unexpected geometry type: {type(geometry)}. Expected Polygon or MultiPolygon.")
+            raise GeometryTypeError(
+                f"Unexpected geometry type: {type(geometry)}. Expected Polygon or MultiPolygon."
+            )
 
         bbox = geometry.bounds
         width = bbox[2] - bbox[0]
@@ -52,31 +53,31 @@ class GeometryHandler:
         area = geometry.area
         if not is_projected:
             area = width * height * 111.139 * 1000 * self._resolution
-            
-        max_area_pixels = (self._max_limit_api ** 2) * (self._max_pixel_size ** 2)
+
+        max_area_pixels = (self._max_limit_api**2) * (self._max_pixel_size**2)
 
         if area < max_area_pixels:
             return True
         else:
-            raise GeometryLimitError("Provided is too large, please reduce the AOI, Max 625 Hectares (approx 1544 acres)")
-
-
+            raise GeometryLimitError(
+                "Provided is too large, please reduce the AOI, Max 625 Hectares (approx 1544 acres)"
+            )
 
     def __get_file_extension(self) -> str:
         """The method returns the file extension of the file"""
         return self.geometry_file.split(".")[-1].lower()
-    
+
     def __read_geometry_file(self, driver: str) -> shapely.geometry:
-        """ 
+        """
         This method handles all the readings in the different formats
-        passing by a str and returning a wkt 
+        passing by a str and returning a wkt
         """
 
         gdf = gpd.read_file(self.geometry_file, driver=driver)
         dissolved = gdf.union_all()
 
         is_projected = gdf.crs.is_projected
-        
+
         self.__validate_geometry(dissolved, is_projected)
 
         if is_projected:
@@ -93,21 +94,21 @@ class GeometryHandler:
         """Reads SHP files and convert it into WKT"""
         return self.__read_geometry_file("ESRI Shapefile")
 
-    def _geojson_reader(self)-> shapely.geometry:
+    def _geojson_reader(self) -> shapely.geometry:
         """Reads Geojson files and convert it into WKT"""
         return self.__read_geometry_file("GeoJSON")
 
     def get_sh_bbox(self) -> BBox:
-        """ 
-        Method return the bbox format required for 
+        """
+        Method return the bbox format required for
         SentinelHub Request based on the Geometry provided
         """
         geometry = self._extension_reader[self._file_extension]()
         return BBox(bbox=geometry.bounds, crs=CRS.WGS84)
-    
-    def get_sh_dimensions(self, resolution:int= 10) -> tuple:
+
+    def get_sh_dimensions(self, resolution: int = 10) -> tuple:
         """
-        Method return the dimensions required for 
+        Method return the dimensions required for
         SentinelHub Request based on the Geometry provided
         """
         bbox = self.get_sh_bbox()
@@ -119,4 +120,6 @@ class GeometryHandler:
             geometry = self._extension_reader[self._file_extension]()
             return geometry.wkt
         else:
-            raise ValueError(f"Unsupported Format: {self._file_extension}. We support geojson, kml and shp.")
+            raise ValueError(
+                f"Unsupported Format: {self._file_extension}. We support geojson, kml and shp."
+            )

@@ -1,15 +1,11 @@
 """
 Tests for command line interface (CLI).
 """
+
 from importlib import import_module
 from importlib.metadata import version
 from os import linesep
-from unittest.mock import patch
-
-import pytest
-from cli_test_helpers import ArgvContext, shell
-
-import planet_cli.cli
+from cli_test_helpers import shell
 
 
 def test_main_module():
@@ -44,4 +40,3 @@ def test_version():
 
     assert result.stdout == f"planet-cli, version {expected_version}{linesep}"
     assert result.exit_code == 0
-

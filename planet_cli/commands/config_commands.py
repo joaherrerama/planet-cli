@@ -1,4 +1,5 @@
 """ This module handles the commands for config subcommand"""
+
 import click
 from planet_cli.classes.config_manager import ConfigManager
 
@@ -6,13 +7,15 @@ from planet_cli.classes.config_manager import ConfigManager
 @click.group()
 def config():
     """This section allows you to set your credentials, output-format and output-type"""
-    click.echo("This section allows you to set your credentials, output-format and output-type")
+    click.echo(
+        "This section allows you to set your credentials, output-format and output-type"
+    )
 
 
 @config.command("credentials")
 @click.argument("client-id")
 @click.argument("client-secret")
-def credentials(client_id:str, client_secret: str):
+def credentials(client_id: str, client_secret: str):
     """
     This command receives client id and client secret
     providing by Sentinel Hub and store it for future usage
@@ -40,5 +43,3 @@ def output_type(output_type):
     config = ConfigManager()
     config.set_output_type(output_type)
     click.echo(f"The output type '{output_type}' is successfully stored'.")
-
-

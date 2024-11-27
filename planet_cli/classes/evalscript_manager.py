@@ -17,7 +17,7 @@ class EvalScriptManager:
                     return [index(samples.B08, samples.B04)]
                 }
             """,
-            "ndvi_png":"""
+            "ndvi_png": """
                 //VERSION=3
                 function setup() {
                     return {
@@ -59,7 +59,7 @@ class EvalScriptManager:
                 }
 
             """,
-            "visual_tiff":"""
+            "visual_tiff": """
                 //VERSION=3
                 function setup(){
                     return{
@@ -75,7 +75,7 @@ class EvalScriptManager:
                     return [sample.B04 * gain, sample.B03 * gain, sample.B02 * gain, sample.dataMask];
                 }
             """,
-            "visual_png":"""
+            "visual_png": """
                 //VERSION=3
                 function setup(){
                     return{
@@ -90,7 +90,7 @@ class EvalScriptManager:
                     // Return RGB
                     return [sample.B04 * gain, sample.B03 * gain, sample.B02 * gain, sample.dataMask];
                 }
-            """
+            """,
         }
 
     def register(self, output_type: str, output_format: str, script):
@@ -104,6 +104,8 @@ class EvalScriptManager:
         script = self.registry.get(key)
 
         if not script:
-            raise ValueError(f"Unsupported type ({output_type}) or format ({output_format}).")
+            raise ValueError(
+                f"Unsupported type ({output_type}) or format ({output_format})."
+            )
 
         return script

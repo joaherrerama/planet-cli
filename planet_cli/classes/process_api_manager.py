@@ -1,8 +1,6 @@
 import datetime
 import os
-import requests
 
-from planet_cli.classes.authorization_manager import AuthorizationManager
 from planet_cli.classes.config_manager import ConfigManager
 from sentinelhub import SHConfig
 from sentinelhub import (
@@ -10,17 +8,17 @@ from sentinelhub import (
     DataCollection,
     MimeType,
     MosaickingOrder,
-    SentinelHubRequest
+    SentinelHubRequest,
 )
 
 from planet_cli.classes.evalscript_manager import EvalScriptManager
 from planet_cli.classes.geometry_handler import GeometryHandler
 
+
 class ProcessApiManager:
 
-    def __init__(self): 
+    def __init__(self):
         self._collection = DataCollection.SENTINEL2_L2A
-
 
     def __get_sh_parameters(self, aoi: str):
         """
@@ -34,17 +32,16 @@ class ProcessApiManager:
         sh_dimensions = geometry_instance.get_sh_dimensions()
         return wkt_geometry, sh_bbox, sh_dimensions
 
-
     def process(
-            self,
-            aoi: str, 
-            start_date: datetime.datetime,
-            end_date: datetime.datetime,
-            client_id: str = None,
-            client_secret: str = None,
-            output_type: str = None,
-            output_format: str = None
-        ) -> SentinelHubRequest:
+        self,
+        aoi: str,
+        start_date: datetime.datetime,
+        end_date: datetime.datetime,
+        client_id: str = None,
+        client_secret: str = None,
+        output_type: str = None,
+        output_format: str = None,
+    ) -> SentinelHubRequest:
         """
         The process method aims to collect all the parameters required
         to process a SentinelHubRequest
@@ -53,8 +50,8 @@ class ProcessApiManager:
             - aoi: path to the area of interest
             - start_date: starting date in format datetime.datetime
             - end_date:  end date in format datetime.datetime
-            - client_id: Client ID from SentinHub profile 
-            - client_secret: Client Secret from SentinHub profile 
+            - client_id: Client ID from SentinHub profile
+            - client_secret: Client Secret from SentinHub profile
             - output_type: Type of product either visual or ndvi
             - output_format: Type of format either tiff or png
         """
@@ -66,7 +63,7 @@ class ProcessApiManager:
 
         if not output_format:
             output_format = local_config.get_output_format()
-        
+
         if not output_type:
             output_type = local_config.get_output_type()
 
@@ -74,7 +71,7 @@ class ProcessApiManager:
 
         wkt_geometry, sh_bbox, sh_dimensions = self.__get_sh_parameters(aoi)
 
-        evalscript_sh = EvalScriptManager().generate_script(output_type,output_format)
+        evalscript_sh = EvalScriptManager().generate_script(output_type, output_format)
         output_format_sh = MimeType.TIFF if output_format == "tiff" else MimeType.PNG
 
         aoi_sh = geometry.Geometry(wkt_geometry, crs=4326)
@@ -83,7 +80,7 @@ class ProcessApiManager:
             evalscript=evalscript_sh,
             input_data=[
                 SentinelHubRequest.input_data(
-                    data_collection= self._collection,
+                    data_collection=self._collection,
                     time_interval=(start_date, end_date),
                     mosaicking_order=MosaickingOrder.LEAST_CC,
                 )
@@ -96,10 +93,10 @@ class ProcessApiManager:
         )
 
         return request
-    
+
     def download(self, request: SentinelHubRequest, destination_folder: str) -> None:
         """
-        This method downloads the elements from the request done to 
+        This method downloads the elements from the request done to
         Sentinel Hob Process API
             - params:
                 - request = a SentinelHubRequest instance
@@ -107,9 +104,9 @@ class ProcessApiManager:
         """
 
         destination_folder = os.path.abspath(destination_folder)
-    
+
         os.makedirs(destination_folder, exist_ok=True)
 
-        request.data_folder=destination_folder
+        request.data_folder = destination_folder
 
         request.get_data(save_data=True)
