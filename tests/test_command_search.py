@@ -32,40 +32,16 @@ def test_invalid_dates(mock_process_api_manager, mock_validate_time):
 def test_search_fail():
     aoi_path = os.path.join(os.path.dirname(__file__), 'assets', 'aoi_test.geojson')
     result = shell(
-        f'planet-cli search --aoi {aoi_path} --start-date 2020-01-20 --end-date 2020-02-20'
+        f'planet-cli search --aoi {aoi_path} --start-date 2020-13-20 --end-date 2020-02-20'
     )
     assert result.exit_code != 0
 
-# def test_search(mock_process_api_manager, mock_validate_time):
-#     runner = CliRunner()
-#     mock_process = mock_process_api_manager.return_value
-#     mock_process.process.return_value = "mock_data_request"
-#     aoi_path = os.path.join(os.path.dirname(__file__), 'assets', 'aoi_test.geojson')
-#     destinationi_path = os.path.join(os.path.dirname(__file__), 'assets')
-#     result = runner.invoke(
-#         search, [
-#             '--aoi', aoi_path, 
-#             '--start-date', '2019-01-20 08:00', 
-#             '--end-date', '2020-11-20 18:00', 
-#             '--destination-folder', destinationi_path, 
-#             '--client-id', 'mock-client-id',
-#             '--client-secret', 'mock-client-secret',
-#             '--output-type', 'visual', 
-#             '--output-format', 'tiff'
-#         ]
-#     )
-#     import pdb;pdb.set_trace()
-#     assert result.exit_code == 0
-#     assert "Processing time image" in result.output
-#     mock_process.process.assert_called_once_with(
-#         aoi_path, 
-#         '2019-01-20 08:00', 
-#         '2020-11-20 18:00', 
-#         'mock-client-id', 
-#         'mock-client-secret', 
-#         'visual', 
-#         'tiff'
-#     )
-#     mock_process.download.assert_called_once_with("mock_data_request", '/mock/folder')
-#     assert "The Image has been successfully stored in /mock/folder." in result.output
 
+# If credentias are setup then it would work else it fails
+def test_search():
+    aoi_path = os.path.join(os.path.dirname(__file__), 'assets', 'aoi_test.geojson')
+    result = shell(
+        f'planet-cli search --aoi {aoi_path} --start-date 2020-01-20 --end-date 2020-02-20'
+    )
+    assert result.exit_code == 0
+    assert result.stdout == 'This CLI tool leverages the SentinelHub Catalog and Processing APIs\nProcessing time image from 2020-01-20 00:00:00 to 2020-02-20 00:00:00.\nThe Image has been successfully stored in /home/jorge/repositories/planet-cli.\n'
