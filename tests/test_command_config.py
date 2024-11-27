@@ -57,27 +57,27 @@ def test_output_format_command_fail(mock_config_manager):
             args = cli.main(args=args)
     except SystemExit as e:
         assert e.code != 0
-        assert "Invalid value for '{visual|ndvi}': 'tiff' is not one of 'visual', 'ndvi'"
+        assert "Invalid value for '{tiff|png}': 'tiff' is not one of 'tiff', 'png'"
 
 
-# def test_output_type_command(mock_config_manager):
-#     mock_instance = MagicMock()
-#     mock_config_manager.return_value = mock_instance
+def test_output_type_command(mock_config_manager):
+    mock_instance = MagicMock()
+    mock_config_manager.return_value = mock_instance
 
-#     try:
-#         with ArgvContext('planet-cli', 'config', 'output-type', 'visual') as args:
-#             args = cli.main(args=args)
-#     except SystemExit as e:
-#         assert e.code == 0
+    try:
+        with ArgvContext('planet-cli', 'config', 'output-type', 'visual') as args:
+            args = cli.main(args=args)
+    except SystemExit as e:
+        assert e.code == 0
 
 
-# def test_output_type_command_fail(mock_config_manager):
-#     mock_instance = MagicMock()
-#     mock_config_manager.return_value = mock_instance
+def test_output_type_command_fail(mock_config_manager):
+    mock_instance = MagicMock()
+    mock_config_manager.return_value = mock_instance
 
-#     try:
-#         with ArgvContext('planet-cli', 'config', 'output-type', 'infrared') as args:
-#             args = cli.main(args=args)
-#     except SystemExit as e:
-#         assert e.code != 0
-#         assert "Invalid value for '{tiff|png}': 'infrared' is not one of 'tiff', 'png'"
+    try:
+        with ArgvContext('planet-cli', 'config', 'output-type', 'infrared') as args:
+            args = cli.main(args=args)
+    except SystemExit as e:
+        assert e.code != 0
+        assert "Invalid value for '{visual|ndvi}': 'infrared' is not one of 'visual', 'ndvi'"

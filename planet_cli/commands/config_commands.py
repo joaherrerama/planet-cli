@@ -38,7 +38,7 @@ def output_format(output_format):
 def output_type(output_type):
     """output-type (default: visual) - Set output type selection for general purpose."""
     config = ConfigManager()
-    config.set_output_type(output_format)
+    config.set_output_type(output_type)
     click.echo(f"The output type '{output_type}' is successfully stored'.")
 
 
