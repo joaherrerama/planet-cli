@@ -49,7 +49,5 @@ def test_search():
         f"planet-cli search --aoi {aoi_path} --start-date 2020-01-20 --end-date 2020-02-20"
     )
     assert result.exit_code == 0
-    output = "This CLI tool leverages the SentinelHub Catalog and Processing APIs\n \
-    Processing time image from 2020-01-20 00:00:00 to 2020-02-20 00:00:00.\n\
-    The Image has been successfully stored in /home/jorge/repositories/planet-cli.\n"
+    output = "This CLI tool leverages the SentinelHub Catalog and Processing APIs\nProcessing time image from 2020-01-20 00:00:00 to 2020-02-20 00:00:00.\nThe Image has been successfully stored in /home/jorge/repositories/planet-cli.\n"
     assert result.stdout == output
