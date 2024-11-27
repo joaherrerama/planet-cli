@@ -42,7 +42,7 @@ def test_search_fail():
     assert result.exit_code != 0
 
 
-# If credentias are setup then it would work else it fails
+# If credentials are setup then it would work else it fails
 def test_search():
     aoi_path = os.path.join(os.path.dirname(__file__), "assets", "aoi_test.geojson")
     result = shell(
